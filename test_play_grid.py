@@ -46,9 +46,9 @@ def test_surrounds():
                     assert cell.surrounding_cells == 8, "Row: "+row_index.__str__()+" Column: "+column_index.__str__()
     return
 
-@pytest.mark.xfail
 def test_mines():
     """Tests that the number of mines is correct"""
+    assert mygrid.num_mines==num_mines
     count = 0
     for row in mygrid.grid:
         for cell in row:

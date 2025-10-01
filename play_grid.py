@@ -76,7 +76,7 @@ class Cell:
         return
 
     def _set_value(self, value: int) -> None:
-        assert self._value is not None, "Can only set Cell.value once"
+        assert self._value is None, "Can only set Cell.value once"
         assert value >= 0 and value < self.surrounding_cells, "Cell.value must be between 0 and \
             the number of surrounding cells"
         self._value = value
@@ -144,5 +144,36 @@ class Grid:
                 self.num_mines+=1
         return NotImplementedError()
 
-    def _calculate_cell_values(self):
-        return NotImplementedError()
+    def collect_surrounds(self, row: int, col: int) -> list[Cell]:
+        assert row >= 0 and row < self.num_rows, "Row must be in bounds"
+        assert col >= 0 and col < self.num_cols, "Column must be in bounds"
+        result: list[Cell]=[]
+        if row != 0:
+            if col != 0:
+                result.append(self.grid[row-1][col-1]) #top left
+            result.append(self.grid[row-1][col]) #top middle
+            if col != (self.num_cols-1):
+                result.append(self.grid[row-1][col+1]) #top right
+        if col!=0:
+            result.append(self.grid[row][col-1]) #middle left
+        #skip self
+        if col!=(self.num_cols-1):
+            result.append(self.grid[row][col+1]) #middle right
+        if row!=(self.num_rows-1):
+            if col != 0:
+                result.append(self.grid[row+1][col-1]) #bottom left
+            result.append(self.grid[row+1][col]) #bottom middle
+            if col != (self.num_cols-1):
+                result.append(self.grid[row+1][col+1]) #bottom right
+        return result
+
+    def _calculate_cell_values(self) -> None:
+        for row_index, row in enumerate(self.grid):
+            for column_index, cell in enumerate(row):
+                surrounds=self.collect_surrounds(row_index, column_index)
+                count=0
+                for s_cell in surrounds:
+                    if s_cell.is_mined:
+                        count+=1
+                cell._set_value(count) #pylint: disable=protected-access
+        return

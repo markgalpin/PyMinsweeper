@@ -71,7 +71,6 @@ def test_unflagged():
             if cell.is_flagged: count+=1
     assert count == 0
 
-@pytest.mark.xfail
 def test_values_set():
     """Tests that all squares have a configured value"""
     for row in mygrid.grid:

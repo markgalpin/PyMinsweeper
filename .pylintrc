@@ -1,0 +1,6 @@
+[MESSAGES CONTROL]
+disable=
+    useless-return,
+    no-else-return
+
+#I'm aware these behaviors aren't necessarily ideal python, but I grew up in C, and can't kick them yet.

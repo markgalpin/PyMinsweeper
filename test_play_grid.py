@@ -16,15 +16,19 @@ num_mines = 10
 mygrid = Grid(num_rows, num_cols, num_mines)
 
 def test_cell_separation():
+    """Test the cells aren't all pointers to the same one."""
     assert mygrid.grid[0][0] is not mygrid.grid[0][1]
     assert mygrid.grid[0][0] is not mygrid.grid[1][0]
+    assert mygrid[0][2] is mygrid.grid[0][2]
 
 def test_size():
+    """Test the grid is the expected size"""
     assert mygrid.num_cols == num_cols
     assert mygrid.num_rows == num_rows
     assert mygrid.total_cells == (num_rows * num_cols)
 
 def test_cell_indicies():
+    """Test that cell indices are configured"""
     for row_index, row in enumerate(mygrid.grid):
         assert row_index < num_rows
         for column_index, cell in enumerate(row):

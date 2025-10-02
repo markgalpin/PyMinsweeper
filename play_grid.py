@@ -183,3 +183,7 @@ class Grid:
                         count+=1
                 cell._set_value(count) #pylint: disable=protected-access
         return
+
+    def __getitem__(self, key: int):
+        assert key < self.num_rows, "Out of bounds row"
+        return self.grid[key]

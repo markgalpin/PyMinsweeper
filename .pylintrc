@@ -1,3 +1,6 @@
+[MASTER]
+load-plugins=
+    pylint-pytest
 [MESSAGES CONTROL]
 disable=
     useless-return,

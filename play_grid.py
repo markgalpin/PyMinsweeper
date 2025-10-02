@@ -23,7 +23,7 @@ class Cell:
     """A class for a single cell in the minesweeper play grid"""
     is_revealed:        bool = False
     is_flagged:         bool = False
-    is_mined:           bool = False
+    _is_mined:           bool = False
     _value:             int  = None
     surrounding_cells:  int  = None
     row_index:          int  = None
@@ -58,20 +58,20 @@ class Cell:
             return None   #Do nothing if the cell is flagged.  I am not asserting this yet
         else:
             self.is_revealed = True
-            return RevealedValue(self.is_mined, self._value)
+            return RevealedValue(self._is_mined, self._value)
 
     def __init__(self, surrounds: int = 8) -> None:
         self.surrounding_cells = surrounds #I haven't decided whether I will use this or not.
         return
 
     def _is_initialized(self) -> bool:
-        if not self.is_mined and self._value is None:
+        if not self._is_mined and self._value is None:
             return False
         else:
             return True
 
     def _set_mined(self) -> None:
-        self.is_mined = True
+        self._is_mined = True
         return
 
     def _set_value(self, value: int) -> None:
@@ -145,7 +145,7 @@ class Grid:
         while self.num_mines < mines:
             row_i=random.randint(0, self.num_rows-1)
             col_i=random.randint(0, self.num_cols-1)
-            if not self.grid[row_i][col_i].is_mined:
+            if not self.grid[row_i][col_i]._is_mined: #pylint: disable=protected-access
                 self.grid[row_i][col_i]._set_mined() #pylint: disable=protected-access
                 self.num_mines+=1
         return NotImplementedError()
@@ -180,7 +180,7 @@ class Grid:
                 surrounds=self.collect_surrounds(row_index, column_index)
                 count=0
                 for s_cell in surrounds:
-                    if s_cell.is_mined:
+                    if s_cell._is_mined: #pylint: disable=protected-access
                         count+=1
                 cell._set_value(count) #pylint: disable=protected-access
         return
@@ -203,7 +203,7 @@ class Grid:
                 elif not cell.is_revealed:
                     outstr+="="
                 else:
-                    if cell.is_mined:
+                    if cell._is_mined: #pylint: disable=protected-access
                         outstr+="@"
                     else:
                         value=cell.revealed_value()
@@ -221,12 +221,12 @@ class Grid:
             outstr=""
             for cell in row:
                 if cell.is_flagged:
-                    if cell.is_mined:
+                    if cell._is_mined: #pylint: disable=protected-access
                         outstr+="F"
                     else:
                         outstr+="X"
                 else:
-                    if cell.is_mined:
+                    if cell._is_mined: #pylint: disable=protected-access
                         if cell.is_revealed:
                             outstr+="@"
                         else:

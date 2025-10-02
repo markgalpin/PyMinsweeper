@@ -61,7 +61,7 @@ def test_mines():
     count = 0
     for row in mygrid.grid:
         for cell in row:
-            if cell.is_mined:
+            if cell._is_mined: #pylint: disable=protected-access
                 count+=1
     assert count == NUM_MINES
 
@@ -87,5 +87,5 @@ def test_values_set():
     """Tests that all squares have a configured value"""
     for row in mygrid.grid:
         for cell in row:
-            if not cell.is_mined:
+            if not cell._is_mined: #pylint: disable=protected-access
                 assert cell._value is not None #pylint: disable=protected-access

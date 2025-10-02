@@ -13,7 +13,7 @@ class RevealedValue(NamedTuple):
     is_mined: bool
     value: int
 
-class FullValue(NamedTuple):
+class VisibleValue(NamedTuple):
     """NamedTuple for the value of a square"""
     is_revealed: bool
     is_flagged: bool
@@ -26,13 +26,15 @@ class Cell:
     is_mined:           bool = False
     _value:             int  = None
     surrounding_cells:  int  = None
+    row_index:          int  = None
+    col_index:          int  = None
 
     def flag(self, flag_val: bool = True) -> None:
         """Flags a cell.  Also has the ability to unflag by passing False"""
         assert self._is_initialized(), "The cell is not initialized"
         self.is_flagged = flag_val
 
-    def full_value(self) -> FullValue:
+    def full_value(self) -> VisibleValue:
         """ Returns the value of a cell as a tuple is_flagged, is_revealed, 
         and an int (or None if its not revealed) 
         """
@@ -104,6 +106,7 @@ class Grid:
         self.total_cells=rows * columns
         assert (mines<self.total_cells), "mines must be less than the total number of cells"
         self._create_cells()
+        self._set_indices()
         self._populate_mines(mines)
         self._calculate_cell_values()
         return
@@ -126,6 +129,12 @@ class Grid:
         self.grid[self.num_rows-1][self.num_cols-1]._set_as_corner()
         #pylint: enable=protected-access
         return
+
+    def _set_indices(self) -> None:
+        for row_index, row in enumerate(self.grid):
+            for col_index, cell in enumerate(row):
+                cell.row_index=row_index
+                cell.col_index=col_index
 
     def _populate_mines(self, mines: int):
         #There should probably be a rule to prevent mines from fully surrounding a square

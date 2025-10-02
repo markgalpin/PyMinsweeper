@@ -24,6 +24,14 @@ def test_size():
     assert mygrid.num_rows == num_rows
     assert mygrid.total_cells == (num_rows * num_cols)
 
+def test_cell_indicies():
+    for row_index, row in enumerate(mygrid.grid):
+        assert row_index < num_rows
+        for column_index, cell in enumerate(row):
+            assert column_index < num_cols
+            assert cell.row_index == row_index
+            assert cell.col_index == column_index
+
 def test_surrounds():
     """Test surrounds.  Should be 3 in the corners, 5 on the edges, and otherwise 8
     """

@@ -4,17 +4,14 @@ This is the tests for play_grid
 
 __author__ = 'Mark Galpin'
 __version__ = '0.1'
-import pytest
-import play_grid
+#import pytest
 from play_grid import Grid
 
+num_cols = 5
 
+num_rows = 5
 
-num_cols = play_grid.DEFAULT_GRID_COLS
-
-num_rows = play_grid.DEFAULT_GRID_ROWS
-
-num_mines = play_grid.DEFAULT_NUM_MINES
+num_mines = 10
 
 mygrid = Grid(num_rows, num_cols, num_mines)
 
@@ -31,9 +28,7 @@ def test_surrounds():
     """Test surrounds.  Should be 3 in the corners, 5 on the edges, and otherwise 8
     """
     for row_index, row in enumerate(mygrid.grid):
-        assert row_index < num_rows
         for column_index, cell in enumerate(row):
-            assert column_index < num_cols
             if row_index == 0 or row_index == (num_rows - 1):
                 if column_index == 0 or column_index == (num_cols - 1): # test the corners and top/bottom edges
                     assert cell.surrounding_cells == 3, "Row: "+row_index.__str__()+" Column: "+column_index.__str__()

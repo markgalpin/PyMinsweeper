@@ -8,10 +8,6 @@ __version__ = '0.1'
 from typing import NamedTuple
 import random
 
-DEFAULT_GRID_COLS=17
-DEFAULT_GRID_ROWS=24
-DEFAULT_NUM_MINES=85
-
 class RevealedValue(NamedTuple):
     """NamedTuple for what happens when you reveal a square"""
     is_mined: bool
@@ -77,7 +73,7 @@ class Cell:
 
     def _set_value(self, value: int) -> None:
         assert self._value is None, "Can only set Cell.value once"
-        assert value >= 0 and value < self.surrounding_cells, "Cell.value must be between 0 and \
+        assert value >= 0 and value <= self.surrounding_cells, "Cell.value must be between 0 and \
             the number of surrounding cells"
         self._value = value
         return
@@ -145,6 +141,7 @@ class Grid:
         return NotImplementedError()
 
     def collect_surrounds(self, row: int, col: int) -> list[Cell]:
+        """This function returns all the surrounding cells"""
         assert row >= 0 and row < self.num_rows, "Row must be in bounds"
         assert col >= 0 and col < self.num_cols, "Column must be in bounds"
         result: list[Cell]=[]

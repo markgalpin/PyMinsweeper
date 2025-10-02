@@ -15,8 +15,8 @@ class RevealedValue(NamedTuple):
 
 class VisibleValue(NamedTuple):
     """NamedTuple for the value of a square"""
-    is_revealed: bool
     is_flagged: bool
+    is_revealed: bool
     value: int
 
 class Cell:
@@ -34,17 +34,18 @@ class Cell:
         assert self._is_initialized(), "The cell is not initialized"
         self.is_flagged = flag_val
 
-    def full_value(self) -> VisibleValue:
+    def visible_value(self) -> VisibleValue:
         """ Returns the value of a cell as a tuple is_flagged, is_revealed, 
         and an int (or None if its not revealed) 
         """
-        return (self.is_flagged, self.is_revealed, self._value)
+        return VisibleValue(self.is_flagged, self.is_revealed, self._value)
 
     def revealed_value(self) -> int:
         """ Returns the int value of a revealed cell. 
         This function has an assertion that the cell is, in fact, revealed"""
-        result=self.full_value()
-        assert not result.is_revealed and not result.is_flagged
+        result=self.visible_value()
+        assert result.is_revealed
+        assert not result.is_flagged
         return result.value
 
     def reveal(self) -> RevealedValue:
@@ -57,7 +58,7 @@ class Cell:
             return None   #Do nothing if the cell is flagged.  I am not asserting this yet
         else:
             self.is_revealed = True
-            return self.is_mined, self._value
+            return RevealedValue(self.is_mined, self._value)
 
     def __init__(self, surrounds: int = 8) -> None:
         self.surrounding_cells = surrounds #I haven't decided whether I will use this or not.
@@ -187,3 +188,52 @@ class Grid:
     def __getitem__(self, key: int):
         assert key < self.num_rows, "Out of bounds row"
         return self.grid[key]
+
+    def __iter__(self):
+        return self.grid.__iter__()
+
+    def serialize_playable(self) -> list[str]:
+        """Outputs a character matrix of the "play screen" in ASCII"""
+        result=[]
+        for row in self.grid:
+            outstr=""
+            for cell in row:
+                if cell.is_flagged:
+                    outstr+="F"
+                elif not cell.is_revealed:
+                    outstr+="="
+                else:
+                    if cell.is_mined:
+                        outstr+="@"
+                    else:
+                        value=cell.revealed_value()
+                        if value == 0:
+                            outstr+="."
+                        else:
+                            outstr+=str(value)
+            result.append(outstr)
+        return result
+
+    def _serialize_reveal_all(self) -> list[str]:
+        """Shows all squares"""
+        result=[]
+        for row in self.grid:
+            outstr=""
+            for cell in row:
+                if cell.is_flagged:
+                    if cell.is_mined:
+                        outstr+="F"
+                    else:
+                        outstr+="X"
+                else:
+                    if cell.is_mined:
+                        if cell.is_revealed:
+                            outstr+="@"
+                        else:
+                            outstr+="*"
+                    elif cell._value == 0: #pylint: disable=protected-access
+                        outstr+="."
+                    else:
+                        outstr+=str(cell._value) #pylint: disable=protected-access
+            result.append(outstr)
+        return result

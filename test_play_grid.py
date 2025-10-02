@@ -7,13 +7,11 @@ __version__ = '0.1'
 #import pytest
 from play_grid import Grid
 
-num_cols = 5
+NUM_COLS = 5
+NUM_ROWS = 5
+NUM_MINES = 10
 
-num_rows = 5
-
-num_mines = 10
-
-mygrid = Grid(num_rows, num_cols, num_mines)
+mygrid = Grid(NUM_ROWS, NUM_COLS, NUM_MINES)
 
 def test_cell_separation():
     """Test the cells aren't all pointers to the same one."""
@@ -23,16 +21,16 @@ def test_cell_separation():
 
 def test_size():
     """Test the grid is the expected size"""
-    assert mygrid.num_cols == num_cols
-    assert mygrid.num_rows == num_rows
-    assert mygrid.total_cells == (num_rows * num_cols)
+    assert mygrid.num_cols == NUM_COLS
+    assert mygrid.num_rows == NUM_ROWS
+    assert mygrid.total_cells == (NUM_ROWS * NUM_COLS)
 
 def test_cell_indicies():
     """Test that cell indices are configured"""
     for row_index, row in enumerate(mygrid.grid):
-        assert row_index < num_rows
+        assert row_index < NUM_ROWS
         for column_index, cell in enumerate(row):
-            assert column_index < num_cols
+            assert column_index < NUM_COLS
             assert cell.row_index == row_index
             assert cell.col_index == column_index
 
@@ -41,33 +39,39 @@ def test_surrounds():
     """
     for row_index, row in enumerate(mygrid.grid):
         for column_index, cell in enumerate(row):
-            if row_index == 0 or row_index == (num_rows - 1):
-                if column_index == 0 or column_index == (num_cols - 1): # test the corners and top/bottom edges
-                    assert cell.surrounding_cells == 3, "Row: "+row_index.__str__()+" Column: "+column_index.__str__()
+            if row_index == 0 or row_index == (NUM_ROWS - 1): # test corners and top/bottom edges
+                if column_index == 0 or column_index == (NUM_COLS - 1):
+                    assert cell.surrounding_cells == 3, \
+                        "Row: "+str(row_index)+" Column: "+str(column_index)
                 else:
-                    assert cell.surrounding_cells == 5, "Row: "+row_index.__str__()+" Column: "+column_index.__str__()
+                    assert cell.surrounding_cells == 5, \
+                        "Row: "+str(row_index)+" Column: "+str(column_index)
             else:
-                if column_index == 0 or column_index == (num_cols - 1): # test the left/right edges:
-                    assert cell.surrounding_cells == 5, "Row: "+row_index.__str__()+" Column: "+column_index.__str__()
+                if column_index == 0 or column_index == (NUM_COLS - 1): # test the left/right edges:
+                    assert cell.surrounding_cells == 5, \
+                        "Row: "+str(row_index)+" Column: "+str(column_index)
                 else: #test everything else
-                    assert cell.surrounding_cells == 8, "Row: "+row_index.__str__()+" Column: "+column_index.__str__()
+                    assert cell.surrounding_cells == 8, \
+                        "Row: "+str(row_index)+" Column: "+str(column_index)
     return
 
 def test_mines():
     """Tests that the number of mines is correct"""
-    assert mygrid.num_mines==num_mines
+    assert mygrid.num_mines==NUM_MINES
     count = 0
     for row in mygrid.grid:
         for cell in row:
-            if cell.is_mined: count+=1
-    assert count == num_mines
+            if cell.is_mined:
+                count+=1
+    assert count == NUM_MINES
 
 def test_unrevealed():
     """Tests that all squares in the initial set are unrevealed"""
     count = 0
     for row in mygrid.grid:
         for cell in row:
-            if cell.is_revealed: count+=1
+            if cell.is_revealed:
+                count+=1
     assert count == 0
 
 def test_unflagged():
@@ -75,7 +79,8 @@ def test_unflagged():
     count = 0
     for row in mygrid.grid:
         for cell in row:
-            if cell.is_flagged: count+=1
+            if cell.is_flagged:
+                count+=1
     assert count == 0
 
 def test_values_set():

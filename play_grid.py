@@ -38,7 +38,10 @@ class Cell:
         """ Returns the value of a cell as a tuple is_flagged, is_revealed, 
         and an int (or None if its not revealed) 
         """
-        return VisibleValue(self.is_flagged, self.is_revealed, self._value)
+        if self.is_revealed:
+            return VisibleValue(self.is_flagged, self.is_revealed, self._value)
+        else:
+            return VisibleValue(self.is_flagged, self.is_revealed, None)
 
     def revealed_value(self) -> int:
         """ Returns the int value of a revealed cell. 

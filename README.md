@@ -1,1 +1,1 @@
-See other files for now.
+See design.md and whys.md for now.

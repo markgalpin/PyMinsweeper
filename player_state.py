@@ -10,7 +10,8 @@ from player_cell import PlayerCell
 class CellBlock:
     cell: PlayerCell = None
     potentials: list[PlayerCell] = []
-    #TODO: I may need a separate check to see if two cell blocks have full overlap in potentials.  But I may just be able to use contains
+    """TODO: I may need a separate check to see if two cell blocks have full overlap in potentials.  
+    But I may just be able to use contains for the lists without custom implementation."""
 
 class PlayerState:
     """This class exists to let the player run hypothetical scenarios, and gives full firewall betweeen the boards

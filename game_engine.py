@@ -33,7 +33,9 @@ class Engine:
         """Updates the ascii board and performs end-game checks"""
         assert not self.game_is_over
         self.ascii_game_board=self.grid.serialize_playable()
-        if self.mines_remaining() == 0:
+        if self.mines_remaining() == 0:   
+#NOTE: most minesweeper games don't end if you use up all the flags unless you're right.
+#This, however is made for computers to play, and they're not supposed to flag something by mistake.
             for row in self.grid:
                 for cell in row:
                     if not cell.is_flagged and not cell.is_revealed:

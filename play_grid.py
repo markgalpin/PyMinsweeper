@@ -17,13 +17,13 @@ class VisibleValue(NamedTuple):
     """NamedTuple for the value of a square"""
     is_flagged: bool
     is_revealed: bool
-    value: int
+    value: int = None
 
 class Cell:
     """A class for a single cell in the minesweeper play grid"""
     is_revealed:        bool = False
     is_flagged:         bool = False
-    _is_mined:           bool = False
+    _is_mined:          bool = False
     _value:             int  = None
     surrounding_cells:  int  = None
     row_index:          int  = None

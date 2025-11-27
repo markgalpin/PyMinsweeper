@@ -1,6 +1,6 @@
 [MASTER]
 load-plugins=
-    pylint-pytest
+    pytest
 [MESSAGES CONTROL]
 disable=
     useless-return,
